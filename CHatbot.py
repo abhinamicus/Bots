@@ -108,16 +108,13 @@ def main():
             unsafe_allow_html=True
         )
 
-    user_input = st.text_input("Your question:", key="input_box", placeholder="Ask Anything Radiohead")
+    user_input = st.text_input("Your question:", key="user_input")
+
     if st.button("Send"):
         if user_input:
-            try:
-                response = chain.invoke({"question": user_input})
-                st.session_state["history"].append((user_input, response["answer"]))
-                st.session_state["input_box"] = ""  # Clear the input box
-            except Exception as e:
-                st.error(f"Chat error: {e}")
-                st.write(e)
+            response = chain.invoke({"question": user_input})
+            st.session_state["history"].append((user_input, response["answer"]))
+            st.session_state.user_input = ""  # This is safe after the button click
 
 if __name__ == "__main__":
     main()
