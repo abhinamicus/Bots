@@ -91,6 +91,9 @@ def main():
     if "user_input" not in st.session_state:
         st.session_state["user_input"] = ""
 
+    def clear_input():
+        st.session_state["user_input"] = ""
+
     # Display chat history
     for user_msg, bot_msg in st.session_state["history"]:
         st.markdown(
@@ -111,12 +114,11 @@ def main():
             placeholder="Ask Anything Radiohead",
             key="user_input"
         )
-        submitted = st.form_submit_button("Come on!")
+        submitted = st.form_submit_button("Come on!", on_click=clear_input)
     if submitted and user_input:
         try:
             response = chain.invoke({"question": user_input})
             st.session_state["history"].append((user_input, response["answer"]))
-            st.session_state["user_input"] = ""  # Clear the input box
         except Exception as e:
             st.error(f"Chat error: {e}")
             st.write(e)
