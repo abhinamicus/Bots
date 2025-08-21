@@ -101,13 +101,7 @@ def main():
 
     if st.button("Send"):
         if user_input:
-            # Use the actual history for follow-ups, or [] for stateless
-            chat_history = [
-                {"role": "user", "content": q}
-                if i % 2 == 0 else
-                {"role": "assistant", "content": a}
-                for i, (q, a) in enumerate(st.session_state["history"])
-            ]
+            chat_history = st.session_state["history"]
             response = chain.invoke({
                 "question": user_input,
                 "chat_history": chat_history
