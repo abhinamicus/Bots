@@ -44,8 +44,7 @@ def safe_run(func):
     return wrapper
 
 def load_and_create_db():
-    # Set your PDF directory path here
-    pdf_dir = r"pdfs"  # Change to your actual PDF directory
+    pdf_dir = "pdfs"  # Use relative path for deployment
 
     docs = []
     if os.path.isdir(pdf_dir):
@@ -53,7 +52,6 @@ def load_and_create_db():
         for pdf_path in pdf_files:
             loader = PyPDFLoader(pdf_path)
             docs.extend(loader.load())
-        # Create embeddings and vector database
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         vectordb = FAISS.from_documents(docs, embeddings)
         return vectordb
@@ -65,15 +63,6 @@ def main():
     st.title("RadioBot")
     set_bg("Thom.png")
 
-    # Debug: List files and folders in the current directory BEFORE loading DB
-    st.write("Current working directory:", os.getcwd())
-    st.write("Files and folders in cwd:", os.listdir())
-    if os.path.exists("pdfs"):
-        st.write("Files in 'pdfs':", os.listdir("pdfs"))
-    else:
-        st.write("'pdfs' folder does not exist.")
-
-    # Always create/load FAISS vector DB in memory (no Chroma, no persist)
     vectordb = load_and_create_db()
 
     memory = ConversationBufferMemory(
@@ -83,7 +72,7 @@ def main():
     )
 
     chat_llm = AzureChatOpenAI(
-        openai_api_version="2023-05-15",  # Use your Azure OpenAI API version
+        openai_api_version="2023-05-15",
         azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
@@ -131,14 +120,6 @@ def main():
         except Exception as e:
             st.error(f"Chat error: {e}")
             st.write(e)
-
-    # Debug: List files and folders in the current directory
-    st.write("Current working directory:", os.getcwd())
-    st.write("Files and folders in cwd:", os.listdir())
-    if os.path.exists("pdfs"):
-        st.write("Files in 'pdfs':", os.listdir("pdfs"))
-    else:
-        st.write("'pdfs' folder does not exist.")
 
 if __name__ == "__main__":
     main()
