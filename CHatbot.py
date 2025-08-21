@@ -106,7 +106,7 @@ def main():
                 "chat_history": []
             })
             st.session_state["history"].append((user_input, response["answer"]))
-            st.session_state.user_input = ""  # This is safe after the button click
+            # Do NOT try to clear st.session_state["user_input"] here
 
 if __name__ == "__main__":
     main()
