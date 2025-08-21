@@ -101,7 +101,10 @@ def main():
 
     if st.button("Send"):
         if user_input:
-            response = chain.invoke({"question": user_input})
+            response = chain.invoke({
+                "question": user_input,
+                "chat_history": []
+            })
             st.session_state["history"].append((user_input, response["answer"]))
             st.session_state.user_input = ""  # This is safe after the button click
 
