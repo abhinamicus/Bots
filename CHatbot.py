@@ -112,14 +112,14 @@ def main():
         user_input = st.text_input(
             label="",
             placeholder="Ask Anything Radiohead",
-            key="user_input"
+            key="user_input",
+            on_change=clear_input
         )
         submitted = st.form_submit_button("Come on!")
     if submitted and user_input:
         try:
             response = chain.invoke({"question": user_input})
             st.session_state["history"].append((user_input, response["answer"]))
-            st.session_state["user_input"] = ""  # Clear the input box for next question
         except Exception as e:
             st.error(f"Chat error: {e}")
             st.write(e)
