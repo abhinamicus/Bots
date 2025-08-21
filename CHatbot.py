@@ -3,7 +3,6 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import AzureChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
 from langchain_community.vectorstores import FAISS
 import os
 import base64
@@ -65,12 +64,6 @@ def main():
 
     vectordb = load_and_create_db()
 
-    memory = ConversationBufferMemory(
-        memory_key="chat_history",
-        input_key="question",
-        return_messages=True
-    )
-
     chat_llm = AzureChatOpenAI(
         openai_api_version="2023-05-15",
         azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
@@ -83,15 +76,11 @@ def main():
     chain = ConversationalRetrievalChain.from_llm(
         llm=chat_llm,
         retriever=vectordb.as_retriever(),
-        memory=memory,
     )
 
     if "history" not in st.session_state:
         st.session_state["history"] = []
     if "user_input" not in st.session_state:
-        st.session_state["user_input"] = ""
-
-    def clear_input():
         st.session_state["user_input"] = ""
 
     # Display chat history
