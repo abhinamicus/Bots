@@ -1,3 +1,18 @@
+"""
+RadioBot: A Streamlit chatbot app using Azure OpenAI and LangChain for conversational retrieval over PDF documents.
+
+Features:
+- Loads all PDFs from the 'pdfs' directory.
+- Uses HuggingFace embeddings and FAISS for vector storage.
+- Provides a conversational interface with short-term memory.
+- Styled chat history and background image.
+
+Environment Variables (set in .env):
+- AZURE_OPENAI_DEPLOYMENT
+- AZURE_OPENAI_ENDPOINT
+- AZURE_OPENAI_API_KEY
+"""
+
 import streamlit as st
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -8,7 +23,7 @@ import os
 import base64
 from dotenv import load_dotenv
 
-load_dotenv()  # Loads variables from .env
+load_dotenv()
 
 # --- Set background image ---
 def set_bg(image_file):
